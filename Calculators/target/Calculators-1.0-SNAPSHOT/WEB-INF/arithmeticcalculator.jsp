@@ -14,9 +14,9 @@
     <body>
         <h1>Arithmetic Calculator</h1>
         <form action="/Calculators/calculator" method="POST">
-            <label>First Number: <input type="number" name="operand1" id="operand1"></input></label>
+            <label>First Number: <input type="number" name="operand1" id="operand1" value="${operand1}"> </label>
             <br>
-            <label>Second Number: <input type="number" name="operand2" id="operand2"></input></label>
+            <label>Second Number: <input type="number" name="operand2" id="operand2" value="${operand2}"> </label>
             <div>
                 <button type="submit" name="operation" id="addition" value="add">+</button>
                 <button type="submit" name="operation" id="subtraction" value="subtract">-</button>

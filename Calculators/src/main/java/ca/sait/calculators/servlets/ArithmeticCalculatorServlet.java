@@ -32,8 +32,9 @@ public class ArithmeticCalculatorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        request.setAttribute("output", "---");
         getServletContext().getRequestDispatcher("/WEB-INF/arithmeticcalculator.jsp").forward(request, response);
-        
+
     }
 
     
@@ -55,23 +56,23 @@ public class ArithmeticCalculatorServlet extends HttpServlet {
             int nSecond = Integer.parseInt(request.getParameter("operand2"));
             String operation = request.getParameter("operation");
             
-            int result = 0;
+            String result = "";
             try{
                 switch(operation) {
                     case "add":
-                        result = nFirst + nSecond;
+                        result = Integer.toString(nFirst + nSecond);
                         break;
                     case "subtract":
-                        result = nFirst - nSecond;
+                        result = Integer.toString(nFirst - nSecond);
                         break;
                     case "multiply":
-                        result = nFirst * nSecond;
+                        result = Integer.toString (nFirst * nSecond);
                         break;
                     case "divide":
-                        result = nFirst / nSecond;
+                        result = Integer.toString(nFirst / nSecond);
                         break;
                     default:
-                        result = 0;
+                        result = "---";
                         break;
                 }
                 request.setAttribute(operation, this);
@@ -81,10 +82,14 @@ public class ArithmeticCalculatorServlet extends HttpServlet {
             } catch(Exception ex) {
                 
             }
-                
-                    
-        
+            
         } catch (Exception ex) {
+            if(!request.getParameter("operand1").equals("")) {    
+                request.setAttribute("operand1", request.getParameter("operand1"));
+            }
+            if(!request.getParameter("operand2").equals("")) {
+                request.setAttribute("operand2", request.getParameter("operand2"));
+            }
             request.setAttribute("output", "invalid");
         }    
 
