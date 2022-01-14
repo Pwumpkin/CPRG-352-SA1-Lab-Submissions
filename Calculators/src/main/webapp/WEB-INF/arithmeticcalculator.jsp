@@ -10,6 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Arithmetic Calculator</title>
+        <link rel="stylesheet" href="/Calculators/styles/master.css"/>
     </head>
     <body>
         <h1>Arithmetic Calculator</h1>

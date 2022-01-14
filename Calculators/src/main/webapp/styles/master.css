@@ -8,5 +8,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 */
 
 h1 {
-    color: pink;
+    color: navy;
+}
+
+label {
+    margin: 0;
+    display: block;
 }
