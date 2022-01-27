@@ -66,7 +66,24 @@ public class NoteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String title = request.getParameter("title");
+        String contents = request.getParameter("contents");
         
+        String path = getServletContext().getRealPath("/WEB-INF/note.txt");
+        
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(path, false))); 
+        
+        pw.println(title);
+        pw.println(contents);
+        
+        pw.close();
+        
+        
+        Note note = new Note(title, contents);
+        
+        request.setAttribute("note", note);
+        
+        getServletContext().getRequestDispatcher("/WEB-INF/viewnote.jsp").forward(request, response);
     }
 
 

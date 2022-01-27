@@ -13,5 +13,6 @@
     </head>
     <body>
         <h1>Edit Note</h1>
+        <form action="note" method="POST">
     </body>
 </html>
