@@ -2,7 +2,7 @@
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <servlet>
         <servlet-name>NoteServlet</servlet-name>
-        <servlet-class>crud.ca.sait.week4lab_simplenotekeeper.servlets.NoteServlet</servlet-class>
+        <servlet-class>crud.ca.sait.lab3.servlets.NoteServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>NoteServlet</servlet-name>
