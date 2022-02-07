@@ -1,6 +1,6 @@
 <%-- 
     Document   : login
-    Created on : Feb. 7, 2022, 5:45:12 a.m.
+    Created on : Feb. 7, 2022, 6:05:30 a.m.
     Author     : Kevin
 --%>
 
@@ -12,6 +12,15 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Login</h1>
+        <form action="login" method="POST">
+            <p>
+                <label for="username">Username: <input type="text" name="username" id="username"></label>
+            </p>
+            <p>
+                <label for="password">Password: <input type="password" name="password" id="password"></label>
+            </p>
+            <button type="submit">Submit</button>
+        </form>
     </body>
 </html>
