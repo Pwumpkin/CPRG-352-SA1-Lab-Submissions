@@ -9,7 +9,7 @@
     <body>
         <h1>Home Page</h1>
         
-        <p><strong>Hello abe</strong></p>
+        <p><strong>Hello ${username}</strong></p>
         
         <a href="login?logout">Logout</a>
     </body>
