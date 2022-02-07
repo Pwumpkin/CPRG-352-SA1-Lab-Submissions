@@ -1,4 +1,4 @@
-    package ca.sait.lab4b.servlets;
+package ca.sait.lab4b.servlets;
 
 import ca.sait.lab4b.records.User;
 import ca.sait.lab4b.services.AccountService;
@@ -29,17 +29,22 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
         
         if(session.getAttribute("username") != null) {
-            response.sendRedirect("home");
+            String query = request.getQueryString();
             
-            //return from method
-            return;
+        
+            if (query != null && query.contains("logout")) {
+                session.invalidate();
+                
+                request.setAttribute("message", "You are logged out.");
+            } else {
+                response.sendRedirect("home");
+                return;
+            }
+            
+            getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         }
         
-        String querry = request.getQueryString();
-        
-        if (querry != null && querry.contains("logout")) {
-            session.invalidate();
-        }
+
         
         getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request,response);
     }
@@ -59,7 +64,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
   
         
-        if(userName.isEmpty() || userName.isBlank() || userName == null || password.isEmpty() || password.isBlank() || password == null) {
+        if(userName.isEmpty() || userName == null || password.isEmpty() || password == null) {
             request.setAttribute("message", "Missing 1 or more login fields.");
         } else {
             AccountService account = new AccountService();
