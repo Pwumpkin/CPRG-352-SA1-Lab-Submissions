@@ -38,6 +38,16 @@ public class ShoppingListServlet extends HttpServlet {
         } else {
             getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
         }
+        
+        String query = request.getQueryString();
+          if (query != null && query.contains("logout")) {
+               session.invalidate();
+                
+               request.setAttribute("message", "You are logged out.");
+        } else {
+            response.sendRedirect("ShoppingListServlet");
+            return;
+        }
          
     }
 

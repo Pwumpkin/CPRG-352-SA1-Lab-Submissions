@@ -9,7 +9,7 @@
     <body>
         <h1>Shopping List</h1>
         
-        <p>Hello, ${name}. <a href="">Logout</a></p>
+        <p>Hello, ${name}. <a href="ShoppingList?logout">Logout</a></p>
         
         <h2>List</h2>
         <form action="ShoppingList" method="post">
