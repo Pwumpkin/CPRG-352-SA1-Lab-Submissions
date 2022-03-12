@@ -1,5 +1,6 @@
 package com.mycompany.lab6.dataaccess;
 
+import com.mycompany.lab6.models.Role;
 import com.mycompany.lab6.models.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,10 +31,13 @@ public class UserDB {
                 String firstName = rs.getString(3);
                 String lastName = rs.getString(4);
                 String password = rs.getString(5);
-                int roleId;
+                int roleId = rs.getInt(6);
+                String roleName = rs.getString(7);
                 
-                Note note = new Note(noteId, title, contents, owner);
-                notes.add(note);
+                Role role = new Role(roleId,roleName);
+                User user = new User(email,active,firstName,lastName,password,role);
+                
+                users.add(user);
             }
         } finally {
             DBUtil.closeResultSet(rs);
@@ -41,7 +45,7 @@ public class UserDB {
             cp.freeConnection(con);
         }
 
-        return notes;
+        return users;
     }
 
     public Note get(int noteId) throws Exception {
