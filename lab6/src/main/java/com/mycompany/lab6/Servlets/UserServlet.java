@@ -118,17 +118,17 @@ public class UserServlet extends HttpServlet {
             }
             users.remove(user);
             
-            String newEmail = request.getParameter(lastName);
-            boolean newActive = request.getParameter(lastName);
-            String newFirstName = request.getParameter(lastName);
-            String newLastName = request.getParameter(lastName);
-            String newPassword = request.getParameter(lastName);
+            String newEmail = request.getParameter("edit-user-email");
+            
+            String newFirstName = request.getParameter("edit-user-firstname");
+            String newLastName = request.getParameter("edit-user-lastname");
+            String newPassword = request.getParameter("edit-user-password");
          
             int id = Integer.parseInt(request.getParameter("edit-user-id"));
             String roleName = request.getParameter("edit-user-email");
             Role role = new Role(id,roleName);
             
-            user = new User(newEmail,newActive,newFirstName,newLastName,newPassword);
+            user = new User(newEmail,true,newFirstName,newLastName,newPassword);
             
             users.add(user);
             session.setAttribute("items", users);
