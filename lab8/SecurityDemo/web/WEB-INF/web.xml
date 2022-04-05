@@ -12,6 +12,14 @@
         <filter-name>AuthenticationFilter</filter-name>
         <servlet-name>NoteServlet</servlet-name>
     </filter-mapping>
+    <filter>
+        <filter-name>AdministrationFilter</filter-name>
+        <filter-class>filters.AdministrationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdministrationFilter</filter-name>
+        <servlet-name>AdminServlet</servlet-name>
+    </filter-mapping>
     <servlet>
         <servlet-name>NoteServlet</servlet-name>
         <servlet-class>servlets.NoteServlet</servlet-class>
