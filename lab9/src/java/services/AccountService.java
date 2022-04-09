@@ -1,6 +1,8 @@
 package services;
 
 import dataaccess.UserDB;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.UUID;
@@ -12,7 +14,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.naming.NamingException;
 import models.User;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AccountService {
     
@@ -34,7 +37,26 @@ public class AccountService {
         String uuid = UUID.randomUUID().toString();
         String link = strUrl + "?uuid=" + uuid;
         
-        String emailBody = "";
+        
+        String userFirstName = null, userLastName = null;
+        FileReader fr=new FileReader("src/java/services/resetpassword.html");
+        BufferedReader br= new BufferedReader(fr);
+        StringBuilder content=new StringBuilder(1024);
+        for(String line = ""; line != null;line=br.readLine()){
+            if(line.indexOf("${firstname}")!= -1){
+                line.replace("${firstname}", userFirstName);
+            } else if (line.indexOf("${lastname}")!= -1) {
+                line.replace("${lastname}", userLastName);  
+            } else if (line.indexOf("${link}")!= -1) {
+                line.replace("${link}", link);  
+            } else if (line.indexOf("${linktext}")!= -1) {
+                line.replace("${linktext}", link);
+            }
+            content.append(line);
+            content.append("\n");
+        }
+        String emailBody = content.toString();
+     
         
         String sender = "cprg352programmer@gmail.com";
         String recipient = email;
