@@ -12,7 +12,7 @@
             email: <input type="text" name="email"><br>
             password: <input type="password" name="password"><br>
             <input type="submit" value="Sign in">
-            <a href="/reset">Reset your password!</a>
+            <a href="/reset" target="_self">Reset your password!</a>
         </form>
     </body>
 </html>

@@ -14,7 +14,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.naming.NamingException;
 import models.User;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AccountService {
@@ -97,6 +96,7 @@ public class AccountService {
             
             // Send message
             Transport.send(message);
+            
         } catch (MessagingException mex) {
             mex.printStackTrace();
         } 

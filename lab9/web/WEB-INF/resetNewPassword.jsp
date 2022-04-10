@@ -14,7 +14,7 @@
     <body>
         <h1>Enter a new password</h1>
         <form action="reset" method="GET">
-            <input type="text" id="newpass">
+            <input type="password" id="newpass">
             <input type="submit" value="Submit">
             <input type="hidden" value="trashUUID">
         </form>

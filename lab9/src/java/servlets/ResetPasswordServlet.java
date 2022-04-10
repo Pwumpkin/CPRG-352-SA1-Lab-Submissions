@@ -23,16 +23,27 @@ public class ResetPasswordServlet extends HttpServlet {
         HttpSession session = request.getSession();
         
         String seshUUID = "";
+        try{
         seshUUID = session.getAttribute("uuid").toString();
-        
-        
-        if(seshUUID != null && !(seshUUID.equals(""))) {
-          getServletContext().getRequestDispatcher("/WEB-INF/resetNewPassword.jsp").forward(request, response);
-          return;
+        } catch (NullPointerException dne){
+            seshUUID = "";
         }
         
+        //uuid is filled in but new password isn't filled in
+        if(seshUUID != null && !(seshUUID.equals("")) && !(request.getParameter("newPass").length()>1) ) {
+          getServletContext().getRequestDispatcher("/WEB-INF/resetNewPassword.jsp").forward(request, response);
+          return;
+      
+        //uuid is filled in && new password filled in
+        } else if (seshUUID != null && !(seshUUID.equals("")) && (request.getParameter("newPass").length()>1)) {
+            AccountService as = new AccountService();
+            as.changePassword(seshUUID, seshUUID);
+            getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            return;
+        }
         
-        getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/WEB-INF/reset.jsp").forward(request, response);
+        
         
     }
 

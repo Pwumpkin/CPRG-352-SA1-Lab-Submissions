@@ -19,6 +19,6 @@
             <label for"their-email">Email Address:<input type="text" id="their-email"></input></label>
             <input type="submit" value="Get Reset Link">
         </form>
-        
+        <a target="_self" href="/login">Back to login</a>
     </body>
 </html>
