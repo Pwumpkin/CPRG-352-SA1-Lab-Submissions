@@ -104,5 +104,27 @@ public class AccountService {
         
         
         
+        
+        
     }
+    
+    
+    
+    
+    public boolean changePassword(String uuid, String password) {
+UserDB userDB = new UserDB();
+try {
+User user = userDB.getByUUID(uuid);
+user.setPassword(password);
+user.setResetPasswordUuid(null);
+userDB.update(user);
+return true;
+} catch (Exception ex) {
+return false;
+}
+}
+    
+    
+    
+    
 }

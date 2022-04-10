@@ -21,8 +21,18 @@ public class ResetPasswordServlet extends HttpServlet {
         //redirect to the Reset jsp
         String url = request.getRequestURL().toString();
         HttpSession session = request.getSession();
-        session.setAttribute("url", url);
-        getServletContext().getRequestDispatcher("/WEB-INF/reset.jsp").forward(request, response);
+        
+        String seshUUID = "";
+        seshUUID = session.getAttribute("uuid").toString();
+        
+        
+        if(seshUUID != null && !(seshUUID.equals(""))) {
+          getServletContext().getRequestDispatcher("/WEB-INF/resetNewPassword.jsp").forward(request, response);
+          return;
+        }
+        
+        
+        getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         
     }
 
@@ -36,10 +46,15 @@ public class ResetPasswordServlet extends HttpServlet {
         
         try {
             as.resetPassword(email, "asdf", strUri);
-            System.out.println("Email sent successfully.");
+            request.setAttribute("message","Recovery Email Successfully Sent!!!");
+           
         } catch (NamingException ex) {
             Logger.getLogger(ResetPasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ResetPasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        getServletContext().getRequestDispatcher("/WEB-INF/reset.jsp").forward(request, response);
     }
 
 

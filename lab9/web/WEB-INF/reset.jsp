@@ -13,6 +13,7 @@
     </head>
     <body>
         <h1>Reset Password</h1>
+        <h2 id="message"></h2>
         <form action="reset" method="POST">
             <p>Please enter your email address to reset your password</p>
             <label for"their-email">Email Address:<input type="text" id="their-email"></input></label>
