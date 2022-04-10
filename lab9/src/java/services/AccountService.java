@@ -33,11 +33,27 @@ public class AccountService {
         return null;
     }
     
-    public void resetPassword(String email, String path, String strUrl) throws NamingException, IOException {
+    public void resetPassword(String email, String path, String strUrl) throws NamingException, IOException, Exception {
+        
+        
         String uuid = UUID.randomUUID().toString();
         String link = strUrl + "?uuid=" + uuid;
         
         
+        //store uuid in database
+        UserDB usrDB = new UserDB();
+        User usr = usrDB.get(email);
+        
+        
+        if(usr==null){
+            return;
+        }
+        
+        
+        usr.setResetPasswordUuid(uuid);
+        usrDB.update(usr);
+        
+
         String userFirstName = null, userLastName = null;
         FileReader fr=new FileReader("src/java/services/resetpassword.html");
         BufferedReader br= new BufferedReader(fr);
@@ -85,7 +101,6 @@ public class AccountService {
             mex.printStackTrace();
         } 
             
-        
         
         
         
