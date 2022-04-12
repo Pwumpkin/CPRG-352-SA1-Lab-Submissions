@@ -4,17 +4,21 @@ import dataaccess.UserDB;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Properties;
 import java.util.UUID;
+import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import models.User;
-import java.util.regex.Pattern;
 
 public class AccountService {
     
@@ -32,80 +36,52 @@ public class AccountService {
         return null;
     }
     
-    public void resetPassword(String email, String path, String strUrl) throws NamingException, IOException, Exception {
+public static void sendMail(String to, String subject, String body, boolean bodyIsHTML) throws MessagingException, NamingException {
+        Context env = (Context) new InitialContext().lookup("java:comp/env");
+        final String username = (String) env.lookup("webmail-username");
+        final String password = (String) env.lookup("webmail-password");
+        Properties props = new Properties();
         
-        
-        String uuid = UUID.randomUUID().toString();
-        String link = strUrl + "?uuid=" + uuid;
-        
-        
-        //store uuid in database
-        UserDB usrDB = new UserDB();
-        User usr = usrDB.get(email);
-        
-        
-        if(usr==null){
-            return;
-        }
-        
-        
-        usr.setResetPasswordUuid(uuid);
-        usrDB.update(usr);
-        
-
-        String userFirstName = null, userLastName = null;
-        FileReader fr=new FileReader("src/java/services/resetpassword.html");
-        BufferedReader br= new BufferedReader(fr);
-        StringBuilder content=new StringBuilder(1024);
-        for(String line = ""; line != null;line=br.readLine()){
-            if(line.indexOf("${firstname}")!= -1){
-                line.replace("${firstname}", userFirstName);
-            } else if (line.indexOf("${lastname}")!= -1) {
-                line.replace("${lastname}", userLastName);  
-            } else if (line.indexOf("${link}")!= -1) {
-                line.replace("${link}", link);  
-            } else if (line.indexOf("${linktext}")!= -1) {
-                line.replace("${linktext}", link);
-            }
-            content.append(line);
-            content.append("\n");
-        }
-        String emailBody = content.toString();
-     
-        
-        String sender = "cprg352programmer@gmail.com";
-        String recipient = email;
-        
-        String host = "localhost";
-        Properties properties = System.getProperties();
-        properties.setProperty("mail.smtp.host", host);
-        Session session = Session.getDefaultInstance(properties);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable","true");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
        
-        try {
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(sender));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-         
-            // Set Subject: header field
-            message.setSubject("Resest NotesKeepr Password");
+        Session session;
+        session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                }
+        );
+        
+       
+        
+        session.setDebug(true);
+        // create a message
+        Message message = new MimeMessage(session);
+        message.setSubject(subject);
+        if (bodyIsHTML) {
+            message.setContent(body, "text/html;charset=UTF-8");
+            message.saveChanges();
+        } else {
+            message.setText(body);
+        }
+        // address the message
+        Address fromAddress = new InternetAddress(username);
+        Address toAddress = new InternetAddress(to);
+        message.setFrom(fromAddress);
+        message.setRecipient(Message.RecipientType.TO, toAddress);
+        // send the message
+//        Transport transport = session.getTransport();
+//        transport.connect(username, password);
+//        transport.sendMessage(message, message.getAllRecipients());
+//        transport.close();
+           Transport.send(message);
+//transport.connect (smtp_host, smtp_port, smtp_username, smtp_password);
 
-            // Send the actual HTML message, as big as you like
-            //message.setContent("<h1>This is actual message</h1>", "text/html" );
-            message.setContent(emailBody, "text/html" );
-         
-            
-            // Send message
-            Transport.send(message);
-            
-        } catch (MessagingException mex) {
-            mex.printStackTrace();
-        } 
-            
-        
-        
-        
-        
-        
     }
     
     

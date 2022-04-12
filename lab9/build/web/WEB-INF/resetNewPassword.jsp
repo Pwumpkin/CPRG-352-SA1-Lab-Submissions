@@ -13,10 +13,11 @@
     </head>
     <body>
         <h1>Enter a new password</h1>
-        <form action="reset" method="GET">
-            <input type="password" id="newpass">
+        <form action="reset" method="POST">
+            <input type="password" id="newpass" name="newpass">
             <input type="submit" value="Submit">
-            <input type="hidden" value="trashUUID">
+            <input type="hidden" id="trashUUID" name="trashUUID" value="${trashUUID}">
+            
         </form>
     </body>
 </html>

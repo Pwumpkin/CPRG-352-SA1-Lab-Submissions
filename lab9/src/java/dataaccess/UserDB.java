@@ -33,12 +33,14 @@ public class UserDB {
         }
     }
 
-    public User getByUUID(String uuid) {
+    public User getByUUID(String reset_password_uuid) {
 
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         
         try {
-            User user = em.find(User.class, uuid);
+            User user = em.createQuery(
+            "SELECT u FROM User u WHERE u.resetPasswordUuid = :targetUUID", User.class)
+            .setParameter("targetUUID",reset_password_uuid).getSingleResult();
             return user;
         } finally {
             em.close();
