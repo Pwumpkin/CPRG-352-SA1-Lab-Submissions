@@ -29,31 +29,24 @@ public class ResetPasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //redirect to the Reset jsp
-        String url = request.getRequestURL().toString();
-        HttpSession session = request.getSession();
-        
-        String seshUUID = "";
-        try{
-        seshUUID = session.getAttribute("uuid").toString();
-        } catch (NullPointerException dne){
-            seshUUID = "";
+     
+        String queryString = request.getQueryString();
+        Object trashUUID = request.getAttribute("trashUUID");
+ 
+        if(queryString != null && queryString.startsWith("uuid=")){
+            UserDB userdb = new UserDB();
+            String strUUID = queryString.replace("uuid=", "");
+            
+            if(userdb.getByUUID(strUUID) != null) {
+                request.setAttribute("trashUUID", strUUID);
+                getServletContext().getRequestDispatcher("/WEB-INF/resetNewPassword.jsp").forward(request, response);
+            }
+        } else {
+            getServletContext().getRequestDispatcher("/WEB-INF/reset.jsp").forward(request, response);
         }
         
-        //uuid is filled in but new password isn't filled in
-        if(seshUUID != null && !(seshUUID.equals("")) && !(request.getParameter("newPass").length()>1) ) {
-          getServletContext().getRequestDispatcher("/WEB-INF/resetNewPassword.jsp").forward(request, response);
-          return;
-      
-        //uuid is filled in && new password filled in
-        } else if (seshUUID != null && !(seshUUID.equals("")) && (request.getParameter("newPass").length()>1)) {
-            AccountService as = new AccountService();
-            as.changePassword(seshUUID, seshUUID);
-            getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
-            return;
-        }
+
         
-        getServletContext().getRequestDispatcher("/WEB-INF/reset.jsp").forward(request, response);
         
         
     }
@@ -65,28 +58,22 @@ public class ResetPasswordServlet extends HttpServlet {
         AccountService as = new AccountService();
         
         String email = request.getParameter("theiremail"); 
-        String uuid = UUID.randomUUID().toString();
-        String strUri = request.getRequestURI();
-        strUri = request.getRequestURL() + request.getRequestURI();
-        String link = strUri + "?uuid=" + uuid;
+        String trashUUID = request.getParameter("trashUUID");
+        
+        if(email != null && trashUUID == null){
+            String uuid = UUID.randomUUID().toString();
+            String strUrl = request.getRequestURL().toString();
+            String link = strUrl + "?uuid=" + uuid;
             
             //store uuid in database
-        UserDB usrDB = new UserDB();
-        User usr = usrDB.get(email);
-       
-        if(usr==null){
-            getServletContext().getRequestDispatcher("/WEB-INF/reset.jsp").forward(request, response);
-        }
-        
-        
-        try {
+            UserDB usrDB = new UserDB();
+            User usr = usrDB.get(email);
+            
+            
+            try {
             usr.setResetPasswordUuid(uuid);
             usrDB.update(usr);
-        } catch (Exception ex) {
-            Logger.getLogger(ResetPasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        
+            
             URL bodyTemplateURL = this.getClass().getResource("/services/resetpassword.html");
             
             URLConnection connection = bodyTemplateURL.openConnection();
@@ -126,10 +113,34 @@ public class ResetPasswordServlet extends HttpServlet {
             } catch (NamingException ex) {
                 Logger.getLogger(ResetPasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
             
-        request.setAttribute("message","Recovery Email Successfully Sent!!!");
-        getServletContext().getRequestDispatcher("/WEB-INF/reset.jsp").forward(request, response);
+            
+            } catch (Exception ex) {
+                Logger.getLogger(ResetPasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           getServletContext().getRequestDispatcher("/WEB-INF/reset.jsp").forward(request, response); 
+            
+        } else if(trashUUID != null) {
+            String newPassword = request.getParameter("newpass");
+            if(newPassword != null){
+                UserDB userdb = new UserDB();
+                User user = userdb.getByUUID(trashUUID);
+                user.setPassword(newPassword);
+                user.setResetPasswordUuid(null);
+                try {
+                    userdb.update(user);
+                } catch (Exception ex) {
+                    Logger.getLogger(ResetPasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            } 
+        }
+        
+        
+
+        
+        
     }
 }
 
